@@ -1,6 +1,7 @@
 import express from 'express'
 import { getRepo, getUser, listUserRepos, getRepoLanguages } from './src/repos.ts'
-import { searchRepos, searchCode, searchUsers } from './src/search.ts'
+import { buildProfile } from './src/profile.ts'
+import { searchRepos, searchCode, searchUsers, searchDevelopers } from './src/search.ts'
 import { getFile, listDir, getReadme } from './src/code.ts'
 import { listIssues, listPullRequests, listCommits } from './src/activity.ts'
 
@@ -25,6 +26,16 @@ app.get('/repos/:owner/:repo', handle((r) => getRepo(s(r.params.owner), s(r.para
 app.get('/repos/:owner/:repo/languages', handle((r) => getRepoLanguages(s(r.params.owner), s(r.params.repo))))
 app.get('/users/:username', handle((r) => getUser(s(r.params.username))))
 app.get('/users/:username/repos', handle((r) => listUserRepos(s(r.params.username))))
+app.get('/users/:username/profile', handle((r) => buildProfile(s(r.params.username))))
+app.get('/search/developers',
+  handle((r) =>
+    searchDevelopers({
+      skill: s(r.query.skill),
+      min_score: r.query.min_score ? Number(r.query.min_score) : 0,
+      limit: r.query.limit ? Number(r.query.limit) : 10,
+    }),
+  ),
+)
 
 // --- Search (pass ?q=...) ---
 app.get('/search/repos', handle((r) => searchRepos(s(r.query.q))))
