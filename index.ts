@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import { getRepo, getUser, listUserRepos, getRepoLanguages } from './src/repos.ts'
 import { buildProfile } from './src/profile.ts'
 import { searchRepos, searchCode, searchUsers, searchDevelopers } from './src/search.ts'
@@ -6,6 +7,8 @@ import { getFile, listDir, getReadme } from './src/code.ts'
 import { listIssues, listPullRequests, listCommits } from './src/activity.ts'
 
 const app = express()
+// Enable CORS for all routes
+app.use(cors())
 
 // Small helper so each route stays a one-liner and errors return clean JSON.
 const handle =
